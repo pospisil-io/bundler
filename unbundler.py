@@ -8,8 +8,8 @@ directory.
 
 Usage:
     python unbundler.py myapp_1.2.0_full_20260318.7z
-    python unbundler.py myapp_1.2.1_patch_20260318.7z -t /path/to/install
-    python unbundler.py myapp_1.2.1_patch_20260318.7z -d
+    python unbundler.py myapp_1.2.0_full_20260318.7z /path/to/install
+    python unbundler.py myapp_1.2.0_full_20260318.7z /path/to/install -d
 """
 
 import argparse
@@ -75,9 +75,15 @@ def apply_bundle(
         print("[info] Files to delete:")
         for rel in deleted:
             target_file = target / rel
-            exists = target_file.exists()
-            suffix = "" if exists else "  (not found, will skip)"
+            suffix = "" if target_file.exists() else "  (not found, will skip)"
             print(f"       {rel}{suffix}")
+
+    # --- Extraction into temp dir, then copy to target ---------------------
+    if changed:
+        print()
+        print("[info] Files to write:")
+        for rel in changed:
+            print(f"       {rel}")
 
     if dry_run:
         print()
@@ -97,18 +103,6 @@ def apply_bundle(
                 parent.rmdir()   # only succeeds if empty
             except OSError:
                 break
-
-    # --- Extraction into temp dir, then copy to target ---------------------
-    if changed:
-        print()
-        print("[info] Files to write:")
-        for rel in changed:
-            print(f"       {rel}")
-
-    if dry_run:
-        print()
-        print("[dry-run] No files written or deleted.")
-        return
 
     with tempfile.TemporaryDirectory() as tmp_str:
         tmp = Path(tmp_str)
@@ -139,7 +133,7 @@ def main() -> None:
     )
     parser.add_argument("archive",
                         help="Path to the .7z bundle archive.")
-    parser.add_argument("-t", "--target", default=".",
+    parser.add_argument("target", nargs="?", default=".",
                         help="Directory to apply the bundle to.  (default: cwd)")
     parser.add_argument("-d", "--dry-run", action="store_true",
                         help="Preview changes without writing or deleting anything.")
