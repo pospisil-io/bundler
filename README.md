@@ -27,9 +27,20 @@ exclude:
 
 ```
 
-### bundler
+### bundler.py [-h] [-i] [-d] [-b LEVEL] [config]
 
-```python
+Project file bundler with incremental change detection
+
+```powershell
+positional arguments:
+  config                      path to bundle.yaml (default: bundle.yaml)
+
+options:
+  -h, --help                  show this help message and exit
+  -i, --incremental           pack only files changed since the last bundle
+  -d, --dry-run               preview which files would be packed; create no archive
+  -b, --bump-version LEVEL    bump version in config before bundling: major | minor | patch
+
 # create full bundle, uses ./bundle.yaml
 python bundler.py
 
@@ -49,9 +60,19 @@ python bundler.py -b minor
 python bundler.py other.yaml -i -b patch
 ```
 
-### unbundler
+### unbundler.py [-h] [-d] archive [target]
 
-```python
+Unpack a project bundle and apply it to an install directory
+
+```powershell
+positional arguments:
+  archive        path to the .7z bundle archive
+  target         directory to apply the bundle to (default: cwd)
+
+options:
+  -h, --help     show this help message and exit
+  -d, --dry-run  preview changes without writing or deleting anything
+
 # unpack a bundle in the current working directory
 python unbundler.py myapp_1.2.0_full_20260318.7z
 
