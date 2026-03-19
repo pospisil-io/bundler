@@ -1,0 +1,12 @@
+project: bundler
+version: "1.0.0"
+output_dir: ./dist
+
+include:
+  - "**"
+
+exclude:
+  - .git/**
+  - .venv/**
+  - dist/**
+  - .bundle_manifest.yaml
