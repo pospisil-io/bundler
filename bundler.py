@@ -1,15 +1,4 @@
 #!/usr/bin/env python3
-"""
-bundler.py — project file bundler with incremental change detection.
-
-Usage:
-    python bundler.py                         # full bundle, uses bundle.yaml
-    python bundler.py other.yaml              # full bundle, explicit config
-    python bundler.py -i                      # pack only changed files
-    python bundler.py -i -d                   # dry-run: preview changed files, no archive
-    python bundler.py -b minor                # bump version in config, then full bundle
-    python bundler.py other.yaml -i -b patch  # explicit config, incremental, bump patch
-"""
 
 import argparse
 import hashlib
@@ -233,19 +222,19 @@ def create_archive(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Project file bundler with incremental change detection.",
+        description="Project file bundler with incremental change detection",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
     parser.add_argument("config", nargs="?", default=DEFAULT_CONFIG,
-                        help="Path to bundle.yaml  (default: %(default)s)")
+                        help="path to bundle.yaml  (default: %(default)s)")
     parser.add_argument("-i", "--incremental", action="store_true",
-                        help="Pack only files changed since the last bundle.")
+                        help="pack only files changed since the last bundle")
     parser.add_argument("-d", "--dry-run", action="store_true",
-                        help="Preview which files would be packed; create no archive.")
+                        help="preview which files would be packed; create no archive")
     parser.add_argument("-b", "--bump-version", metavar="LEVEL",
                         choices=BUMP_LEVELS,
-                        help="Bump version in config before bundling: major | minor | patch")
+                        help="bump version in config before bundling: major | minor | patch")
     args = parser.parse_args()
 
     config_path = Path(args.config)

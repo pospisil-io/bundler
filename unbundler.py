@@ -1,16 +1,4 @@
 #!/usr/bin/env python3
-"""
-unbundler.py — unpack a project bundle and apply it to an install directory.
-
-Reads the release_manifest.yaml embedded in the archive to know which files
-to overwrite and which to delete, then applies the changes to the target
-directory.
-
-Usage:
-    python unbundler.py myapp_1.2.0_full_20260318.7z
-    python unbundler.py myapp_1.2.0_full_20260318.7z /path/to/install
-    python unbundler.py myapp_1.2.0_full_20260318.7z /path/to/install -d
-"""
 
 import argparse
 import sys
@@ -127,16 +115,16 @@ def apply_bundle(
 
 def main() -> None:
     parser = argparse.ArgumentParser(
-        description="Unpack a project bundle and apply it to an install directory.",
+        description="Unpack a project bundle and apply it to an install directory",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=__doc__,
     )
     parser.add_argument("archive",
-                        help="Path to the .7z bundle archive.")
+                        help="path to the .7z bundle archive")
     parser.add_argument("target", nargs="?", default=".",
-                        help="Directory to apply the bundle to.  (default: cwd)")
+                        help="directory to apply the bundle to (default: cwd)")
     parser.add_argument("-d", "--dry-run", action="store_true",
-                        help="Preview changes without writing or deleting anything.")
+                        help="preview changes without writing or deleting anything")
     args = parser.parse_args()
 
     archive_path = Path(args.archive)
