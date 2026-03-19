@@ -75,21 +75,28 @@ def apply_bundle(
         print("[info] Files to delete:")
         for rel in deleted:
             target_file = target / rel
-            print(f"       {rel}", end="")
-            if not target_file.exists():
-                print("  (not found, skipping)")
-                continue
-            print()
-            if not dry_run:
-                target_file.unlink()
-                # Clean up empty parent directories
-                for parent in target_file.parents:
-                    if parent == target:
-                        break
-                    try:
-                        parent.rmdir()   # only succeeds if empty
-                    except OSError:
-                        break
+            exists = target_file.exists()
+            suffix = "" if exists else "  (not found, will skip)"
+            print(f"       {rel}{suffix}")
+
+    if dry_run:
+        print()
+        print("[dry-run] No files written or deleted.")
+        return
+
+    for rel in deleted:
+        target_file = target / rel
+        if not target_file.exists():
+            continue
+        target_file.unlink()
+        # Clean up empty parent directories
+        for parent in target_file.parents:
+            if parent == target:
+                break
+            try:
+                parent.rmdir()   # only succeeds if empty
+            except OSError:
+                break
 
     # --- Extraction into temp dir, then copy to target ---------------------
     if changed:
